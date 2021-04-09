@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% block content %}
+<div class="row">
+	<div class="col-sm-3"></div>
+	<div class="col-sm-6">
+		<div class="card p-3">
+			<form
+				class="form-signup"
+				id="new-user-form"
+				method="POST"
+				action="signup"
+			>
+				<h1 class="h3 mb-3 font-weight-normal">New User</h1>
+				{% with messages = get_flashed_messages() %} {% if messages %}
+				<div class="alert alert-danger">{{ messages[0] }}</div>
+				{% endif %} {% endwith %}
+				<label for="first_name" class="sr-only">First Name</label>
+				<input
+					type="text"
+					id="first_name"
+					name="first_name"
+					class="form-control mb-1"
+					placeholder="First Name"
+					required=""
+					autofocus=""
+				/>
+				<label for="last_name" class="sr-only">Last Name</label>
+				<input
+					type="text"
+					id="last_name"
+					name="last_name"
+					class="form-control mb-1"
+					placeholder="Last Name"
+					required=""
+				/>
+				<label for="username" class="sr-only">Username</label>
+				<input
+					type="text"
+					id="username"
+					name="username"
+					class="form-control mb-1"
+					placeholder="Username"
+					required=""
+				/>
+				<label for="password" class="sr-only">Password</label>
+				<input
+					type="password"
+					id="password"
+					name="password"
+					class="form-control mb-1"
+					placeholder="Password"
+					required=""
+				/>
+				<label for="password2" class="sr-only">Retype Password</label>
+				<input
+					type="password"
+					id="password2"
+					name="password2"
+					class="form-control"
+					placeholder="Retype Password"
+					required=""
+				/>
+				<p id="password_mismatch_error_message">
+					Error: Passwords entered do not match. Please try again.
+				</p>
+				<button
+					class="btn btn-lg btn-primary btn-block mt-3"
+					type="button"
+					onClick="comparePasswords()"
+				>
+					Sign in
+				</button>
+			</form>
+		</div>
+	</div>
+	<div class="col-sm-3"></div>
+</div>
+
+{% endblock %}

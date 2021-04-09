@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="page-content page-container" id="page-content">
+        <div class="padding">
+            <div class="row container d-flex justify-content-center">
+                <div class="col-md-12">
+                    <div class="card px-3">
+                        <div class="card-body"></div>
+
+
+                        <h4 class="card-title">{{ current_user.first_name }}'s Todo List</h4>
+                        <div class="add-items d-flex ">
+                            <div class="input-group mr-1">
+                            <input type="text" id="toDoInput"
+                                                              class="form-control todo-list-input"
+                                                              placeholder="Add Item Here">
+                            <input id="task-due-date" type="hidden">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" onClick="openDateRangePicker()"><div id="date-range-picker">
+                                    <i class="glyphicon glyphicon-calendar fa fa-calendar" onClick="openDateRangePicker()"></i>
+                                    <span id='datemedisplay'>
+                                    </span> <b class="caret"></b>
+                                </div></button>
+                            </div>
+                                                            
+                            </div>
+                            <button class="add btn btn-primary font-weight-bold todo-list-add-btn " onclick="addItem()">
+                                Add
+                            </button>
+                        </div>
+                        <div class="list-wrapper mt-1 mb-5">
+                            <ul id="todo-list" class="list-group">
+                                {% for todo in todos %}
+                                    <li id="todo-item-{{ todo.id }}" class="list-group-item">
+                                        <div class="form-check">
+                                            <div class="row">
+                                                <div class="col-sm-9">
+                                                    <label class="form-check-label mt-1">
+                                                        <input id="check-{{ todo.id }}" class="checkbox mr-1 mt-1"
+                                                               type="checkbox" onClick="markComplete({{ todo.id }})"
+                                                               {% if todo.completed %}checked{% endif %}> <label
+                                                            for="check-{{ todo.id }}"
+                                                            id="task-{{ todo.id }}" class="task"><i class="task-date">{{ todo.due_date|friendly_date }}</i>: {{ todo.task }}</label>
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <div class="btn-group btn-group-sm mt-1" role="group"
+                                                         aria-label="action buttons">
+                                                        <button type="button" class="btn btn-secondary up-button"
+                                                                onClick="moveItem({{ todo.id }}, 'up')"><i
+                                                                class="fas fa-angle-up"></i></button>
+                                                        <button type="button" class="btn btn-secondary down-button"
+                                                                onClick="moveItem({{ todo.id }}, 'down')"><i
+                                                                class="fas fa-angle-down"></i></button>
+                                                        <button type="button" class="btn btn-secondary"
+                                                                onClick="editItemModal({{ todo.id }})"><i
+                                                                class="far fa-edit"></i></button>
+                                                        <button type="button" class="btn btn-secondary"
+                                                                onClick="deleteItemModal({{ todo.id }})"><i
+                                                                class="fas fa-times"></i></button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="edit-task-modal" tabindex="-1" role="dialog" aria-labelledby="edit-task-modal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Task</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="editTodoInput" class="form-control todo-list-input mr-1" placeholder="">
+                </div>
+                <input type="hidden" id="edit-todo-id" name="edit-todo-id" value="">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onClick="editItem()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="delete-task-modal" tabindex="-1" role="dialog" aria-labelledby="delete-task-modal"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you would like to delete this task?
+                </div>
+                <input type="hidden" id="delete-todo-id" name="delete-todo-id" value="">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" onClick="deleteItem()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    There was an issue submitting your request. Please try again.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="character-count-error-modal" tabindex="-1" role="dialog" aria-labelledby="character-count-error-modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Task cannot exceed 280 characters.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+

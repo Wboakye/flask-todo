@@ -1,0 +1,13 @@
+.task {
+	font-size: 14px;
+}
+
+.task-date {
+	color: #6c757d;
+}
+
+#password_mismatch_error_message {
+	color: #b20000;
+	font-size: 13px;
+	display: none;
+}
